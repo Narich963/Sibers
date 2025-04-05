@@ -9,4 +9,12 @@ public class SibersContext : IdentityDbContext<User, IdentityRole<int>, int>
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Project> Projects { get; set; }
+    public SibersContext(DbContextOptions opts) : base(opts)
+    {
+        
+    }
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+    }
 }
