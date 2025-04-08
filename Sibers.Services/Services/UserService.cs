@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Sibers.Core.Entities;
 using Sibers.Core.Interfaces;
-using Sibers.Services.DTO;
 
 namespace Sibers.Services.Services;
 
