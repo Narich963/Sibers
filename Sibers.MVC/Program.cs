@@ -13,7 +13,14 @@ builder.Services.AddControllersWithViews();
 
 string connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<SibersContext>(opts => opts.UseSqlite(connection, b => b.MigrationsAssembly("Sibers.MVC")))
-                .AddIdentity<User, IdentityRole<int>>()
+                .AddIdentity<User, IdentityRole<int>>(opts =>
+                {
+                    opts.Password.RequiredLength = 5;
+                    opts.Password.RequireDigit = false;
+                    opts.Password.RequireNonAlphanumeric = false;
+                    opts.Password.RequireUppercase = false;
+                    opts.Password.RequireLowercase = false;
+                })
                 .AddEntityFrameworkStores<SibersContext>();
 
 builder.Services.AddTransient(typeof(IRepository<Project>), typeof(ProjectRepository));

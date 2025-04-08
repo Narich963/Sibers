@@ -7,5 +7,6 @@ public interface IUnitOfWork : IDisposable
 {
     UserManager<User> UserManager { get; }
     IRepository<Project> ProjectManager { get; }
+    SignInManager<User> SignInManager { get; }
     Task SaveChangesAsync();
 }

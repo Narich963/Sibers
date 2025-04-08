@@ -58,6 +58,25 @@ public class SibersContext : IdentityDbContext<User, IdentityRole<int>, int>
             }
         );
 
-
+        builder.Entity<IdentityRole<int>>().HasData(
+            new IdentityRole<int>
+            {
+                Id = 1,
+                Name = "leader",
+                NormalizedName = "LEADER"
+            },
+            new IdentityRole<int>
+            {
+                Id = 2,
+                Name = "manager",
+                NormalizedName = "MANAGER"
+            },
+            new IdentityRole<int>
+            {
+                Id = 3,
+                Name = "employee",
+                NormalizedName = "EMPLOYEE"
+            }
+        );
     }
 }
