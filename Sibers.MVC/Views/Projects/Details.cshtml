@@ -1,0 +1,14 @@
+﻿@using Sibers.Core.Entities
+@model Project?
+
+@if (TempData["Error"] != null){
+    <div class="alert alert-danger" role="alert">
+        @TempData["Error"]
+    </div>
+}
+
+<div>
+    <h2>@Model.Name</h2>
+    <h2>@Model.CustomerCompanyName</h2>
+    <h2>@Model.ExecutorCompanyName</h2>
+</div>

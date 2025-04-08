@@ -33,5 +33,29 @@ public class SibersContext : IdentityDbContext<User, IdentityRole<int>, int>
             .HasForeignKey(p => p.ManagerUserId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        builder.Entity<Project>().HasData(
+            new Project
+            {
+                Id = 1,
+                Name = "CRM Development",
+                CustomerCompanyName = "TechCorp",
+                ExecutorCompanyName = "DevSolutions",
+                StartDate = null,
+                EndDate = null,
+                Priority = 1,
+                ManagerUserId = null
+            },
+            new Project
+            {
+                Id = 2,
+                Name = "Website Redesign",
+                CustomerCompanyName = "DesignStudio",
+                ExecutorCompanyName = "UIExperts",
+                StartDate = null,
+                EndDate = null,
+                Priority = 2,
+                ManagerUserId = null
+            }
+        );
     }
 }

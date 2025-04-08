@@ -19,6 +19,7 @@ builder.Services.AddDbContext<SibersContext>(opts => opts.UseSqlite(connection, 
 builder.Services.AddTransient(typeof(IRepository<Project>), typeof(ProjectRepository));
 builder.Services.AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork));
 builder.Services.AddTransient(typeof(UserService));
+builder.Services.AddTransient(typeof(ProjectService));
 
 var app = builder.Build();
 
