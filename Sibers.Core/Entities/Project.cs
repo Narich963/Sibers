@@ -13,7 +13,7 @@ public class Project
     public int Priority { get; set; }
 
     public int ManagerUserId { get; set; }
-    public User User { get; set; }
+    public User Manager { get; set; }
 
     public List<User> Employees { get; set; }
     
