@@ -45,4 +45,40 @@ public class ProjectsController : Controller
         }
         return View();
     }
+
+    [HttpGet]
+    public async Task<IActionResult> Edit(int? id)
+    {
+        if (!id.HasValue)
+            return NotFound();
+        var projectResult = await _projectService.GetAsync(id.Value);
+        if (projectResult.IsSuccess)
+            return View(projectResult.Value);
+        return BadRequest(projectResult.Error);
+    }
+    [HttpPost]
+    public async Task<IActionResult> Edit(Project newProject)
+    {
+        if (ModelState.IsValid)
+        {
+            var projectResult = await _projectService.Update(newProject);
+            if (projectResult.IsSuccess)
+                return RedirectToAction("Details", new { id = projectResult.Value.Id });
+            return BadRequest(projectResult.Error);
+        }
+        return View(newProject);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Delete(int? id)
+    {
+        if (id != null)
+        {
+            var result = await _projectService.Delete(id.Value);
+            if (result.IsSuccess)
+                return RedirectToAction("Index");
+            return BadRequest(result.Error);
+        }
+        return NotFound();
+    }
 }

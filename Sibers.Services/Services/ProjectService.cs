@@ -32,4 +32,26 @@ public class ProjectService
         }
         return Result.Failure<Project>("The project is empty.");
     }
+
+    public async Task<Result<Project>> Update(Project project)
+    {
+        if (project != null)
+        {
+            _uow.ProjectManager.Update(project);
+            await _uow.SaveChangesAsync();
+            return Result.Success(project);
+        }
+        return Result.Failure<Project>($"An error occured while trying to update project with Id = {project.Id}.");
+    }
+
+    public async Task<Result> Delete(int? id)
+    {
+        if (id != null)
+        {
+            _uow.ProjectManager.Delete(id.Value);
+            await _uow.SaveChangesAsync();
+            return Result.Success();
+        }
+        return Result.Failure($"An error ha occured while trying to delete a project.");
+    }
 }
