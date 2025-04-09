@@ -9,11 +9,13 @@ namespace Sibers.MVC.Controllers;
 public class ProjectsController : Controller
 {
     private readonly ProjectService _projectService;
+    private readonly UserService _userService;
     private const int PAGE_SIZE = 2;
 
-    public ProjectsController(ProjectService projectService)
+    public ProjectsController(ProjectService projectService, UserService userService)
     {
         _projectService = projectService;
+        _userService = userService;
     }
 
     [HttpGet]
@@ -38,6 +40,10 @@ public class ProjectsController : Controller
             StartDateFrom = startDate,
             StartDateTo = endDate
         };
+
+        var users = await _userService.GetAllAsync();
+        ViewBag.Users = users.Value;
+
          return View(model);
     }
     [HttpGet]
@@ -99,5 +105,14 @@ public class ProjectsController : Controller
             return BadRequest(result.Error);
         }
         return NotFound();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> SetManager(int? userId, int? projectId)
+    {
+        var result = await _projectService.SetManager(userId, projectId);
+        if (result.IsSuccess)
+            return RedirectToAction("Index");
+        return BadRequest();
     }
 }

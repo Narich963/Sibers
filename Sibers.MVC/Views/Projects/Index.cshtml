@@ -1,4 +1,5 @@
-﻿@using Sibers.Core.Enums
+﻿@using Sibers.Core.Entities
+@using Sibers.Core.Enums
 @using Sibers.MVC.ViewModels.Projects
 @model ProjectsListViewModel
 
@@ -93,7 +94,32 @@
             <p><strong>Customer company:</strong> @project.CustomerCompanyName</p>
             <p><strong>Executor company:</strong> @project.ExecutorCompanyName</p>
             <p><strong>Period:</strong> @project.StartDate?.ToShortDateString() - @project.EndDate?.ToShortDateString()</p>
-            <p><strong>Manager:</strong> @(project.Manager?.LastName + " " + project.Manager?.FirstName)</p>
+            <form asp-action="SetManager" method="post" class="d-flex align-items-center gap-2">
+                <input type="hidden" name="projectId" value="@project.Id" />
+
+                <label for="managerSelect_@project.Id" class="mb-0"><strong>Manager:</strong></label>
+                <p><strong>@(project.Manager == null ? "No manager" : project.Manager.FirstName)</strong></p>
+                @if (ViewBag.Users is List<User> users)
+                {
+                    @if (users != null && users.Any())
+                    {
+                        <select id="managerSelect_@project.Id" name="userId" class="form-select form-select-sm w-auto">
+                            @foreach (var user in users)
+                            {
+                                <option value="@user.Id" selected="@(project.ManagerUserId == user.Id)">
+                                    @user.LastName @user.FirstName
+                                </option>
+                            }
+                        </select>
+                    }
+                    else
+                    {
+                        <span class="text-muted">No users available</span>
+                    }
+                }
+
+                <button type="submit" class="btn btn-outline-primary btn-sm">Выбрать</button>
+            </form>
             <p>
                 <strong>Employees:</strong>
                 @if (project.Employees != null && project.Employees.Any())

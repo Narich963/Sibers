@@ -107,4 +107,25 @@ public class ProjectService
         return Result.Failure($"An error ha occured while trying to delete a project.");
     }
     public async Task<int> Count() => await _uow.ProjectManager.Count();
+
+    public async Task<Result> SetManager(int? userId, int? projectId)
+    {
+        if (userId == null)
+            return Result.Failure("User id is null");
+        if (projectId == null)
+            return Result.Failure("Project id is null");
+
+        var user = await _uow.UserManager.FindByIdAsync(userId.Value.ToString());
+        if (user != null)
+        {
+            var project = await _uow.ProjectManager.Get(projectId.Value);
+            if (project == null)
+                return Result.Failure($"No project with Id = {projectId} was found.");
+
+            project.ManagerUserId = userId;
+            await _uow.SaveChangesAsync();
+            return Result.Success();
+        }
+        return Result.Failure("Failed to set a new manager to this project.");
+    }
 }
