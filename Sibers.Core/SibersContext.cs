@@ -42,7 +42,7 @@ public class SibersContext : IdentityDbContext<User, IdentityRole<int>, int>
                 ExecutorCompanyName = "DevSolutions",
                 StartDate = null,
                 EndDate = null,
-                Priority = 1,
+                Priority = Enums.Priority.Low,
                 ManagerUserId = null
             },
             new Project
@@ -53,7 +53,7 @@ public class SibersContext : IdentityDbContext<User, IdentityRole<int>, int>
                 ExecutorCompanyName = "UIExperts",
                 StartDate = null,
                 EndDate = null,
-                Priority = 2,
+                Priority = Enums.Priority.Middle,
                 ManagerUserId = null
             }
         );

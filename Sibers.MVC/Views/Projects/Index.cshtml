@@ -1,6 +1,142 @@
-﻿@using Sibers.Core.Entities
-@model IEnumerable<Project>
+﻿@using Sibers.Core.Enums
+@using Sibers.MVC.ViewModels.Projects
+@model ProjectsListViewModel
 
-@foreach (var p in Model){
-    <h2>@p.Name</h2>
+<link href="~/css/projects.css" rel="stylesheet" />
+
+@{
+    string nextSortOrder(string field) =>
+        Model.SortField == field && Model.Ascending ? "false" : "true";
+
+    string arrow(string field) =>
+        Model.SortField == field ? (Model.Ascending ? "↑" : "↓") : "";
 }
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">List of projects</h2>
+        <a asp-action="Create" class="btn btn-success">Create project</a>
+    </div>
+
+    <form method="get" class="mb-4 bg-light p-3 rounded shadow-sm">
+        <div class="row g-3">
+            <div class="col-md-3">
+                <input type="text" name="NameFilter" value="@Model.NameFilter" class="form-control" placeholder="Project name" />
+            </div>
+            <div class="col-md-2">
+                <select name="PriorityFilter" class="form-select">
+                    <option value="">All priorities</option>
+                    @foreach (Priority priority in Enum.GetValues(typeof(Priority)))
+                    {
+                        @if (Model.PriorityFilter == priority)
+                        {
+                            <option value="@priority" selected>@priority</option>
+                        }
+                        else
+                        {
+                            <option value="@priority">@priority</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <input type="date" name="StartDateFrom" class="form-control" value="@(Model.StartDateFrom?.ToString("yyyy-MM-dd"))" placeholder="Start date" />
+            </div>
+            <div class="col-md-2">
+                <input type="date" name="StartDateTo" class="form-control" value="@(Model.StartDateTo?.ToString("yyyy-MM-dd"))" placeholder="End date" />
+            </div>
+            <div class="col-md-3 d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary me-2">Filter</button>
+                <a href="@Url.Action("Index")" class="btn btn-secondary">Reset</a>
+            </div>
+        </div>
+    </form>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <span>Soft by: </span>
+            <a class="btn btn-outline-primary btn-sm me-1"
+               asp-action="Index" asp-route-sortField="Name" asp-route-ascending="@nextSortOrder("Name")"
+               asp-route-NameFilter="@Model.NameFilter" asp-route-PriorityFilter="@Model.PriorityFilter"
+               asp-route-StartDateFrom="@Model.StartDateFrom" asp-route-StartDateTo="@Model.StartDateTo">
+                Project name @arrow("Name")
+            </a>
+            <a class="btn btn-outline-primary btn-sm me-1"
+               asp-action="Index" asp-route-sortField="Priority" asp-route-ascending="@nextSortOrder("Priority")"
+               asp-route-NameFilter="@Model.NameFilter" asp-route-PriorityFilter="@Model.PriorityFilter"
+               asp-route-StartDateFrom="@Model.StartDateFrom" asp-route-StartDateTo="@Model.StartDateTo">
+                Priority @arrow("Priority")
+            </a>
+            <a class="btn btn-outline-primary btn-sm"
+               asp-action="Index" asp-route-sortField="StartDate" asp-route-ascending="@nextSortOrder("StartDate")"
+               asp-route-NameFilter="@Model.NameFilter" asp-route-PriorityFilter="@Model.PriorityFilter"
+               asp-route-StartDateFrom="@Model.StartDateFrom" asp-route-StartDateTo="@Model.StartDateTo">
+                Start date @arrow("StartDate")
+            </a>
+        </div>
+    </div>
+
+    @foreach (var project in Model.Projects)
+    {
+        var priorityClass = project.Priority switch
+        {
+            Priority.High => "priority-high",
+            Priority.Middle => "priority-middle",
+            Priority.Low => "priority-low",
+            _ => ""
+        };
+        <div class="project-card mb-4 p-3 shadow rounded bg-light">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="mb-0">@project.Name</h5>
+                <span class="@priorityClass">@project.Priority</span>
+            </div>
+            <p><strong>Customer company:</strong> @project.CustomerCompanyName</p>
+            <p><strong>Executor company:</strong> @project.ExecutorCompanyName</p>
+            <p><strong>Period:</strong> @project.StartDate?.ToShortDateString() - @project.EndDate?.ToShortDateString()</p>
+            <p><strong>Manager:</strong> @(project.Manager?.LastName + " " + project.Manager?.FirstName)</p>
+            <p>
+                <strong>Employees:</strong>
+                @if (project.Employees != null && project.Employees.Any())
+                {
+                    foreach (var emp in project.Employees)
+                    {
+                        <span class="badge bg-secondary me-1">@emp.LastName @emp.FirstName</span>
+                    }
+                }
+                else
+                {
+                    <span class="text-muted">No employees</span>
+                }
+            </p>
+
+            <div class="d-flex justify-content-end gap-2 mt-3">
+                <a asp-action="Details" asp-route-id="@project.Id" class="btn btn-primary btn-sm">Посмотреть</a>
+                <a asp-action="Edit" asp-route-id="@project.Id" class="btn btn-warning btn-sm">Изменить</a>
+                <form asp-action="Delete" asp-route-id="@project.Id" method="post" onsubmit="return confirm('Вы уверены, что хотите удалить этот проект?')" style="display:inline;">
+                    <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+                </form>
+            </div>
+        </div>
+    }
+
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center mt-4">
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-page="@i"
+                       asp-route-sortField="@Model.SortField"
+                       asp-route-ascending="@Model.Ascending"
+                       asp-route-NameFilter="@Model.NameFilter"
+                       asp-route-PriorityFilter="@Model.PriorityFilter"
+                       asp-route-StartDateFrom="@Model.StartDateFrom"
+                       asp-route-StartDateTo="@Model.StartDateTo">
+                        @i
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>

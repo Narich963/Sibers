@@ -20,6 +20,13 @@ public class ProjectRepository : IRepository<Project>
                     .Include(p => p.Employees)
                     .ToListAsync();
     }
+    public IQueryable<Project> GetAllAsQueryable()
+    {
+        return _context.Projects
+            .Include(p => p.Manager)
+            .Include(p => p.Employees)
+            .AsQueryable();
+    }
 
     public async Task<IEnumerable<Project>> FindAsync(Expression<Func<Project, bool>> predicate)
     {
@@ -49,4 +56,6 @@ public class ProjectRepository : IRepository<Project>
     {
         await _context.SaveChangesAsync();
     }
+    public async Task<int> Count() => await _context.Projects.CountAsync();
+    
 }

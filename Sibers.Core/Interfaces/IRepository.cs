@@ -11,4 +11,6 @@ public interface IRepository<T> where T : class
     void Update(T entity);
     void Delete(int id);
     Task SaveAsync();
+    IQueryable<T> GetAllAsQueryable();
+    Task<int> Count();
 }

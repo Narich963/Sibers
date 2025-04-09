@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Sibers.Core.Entities;
+using Sibers.Core.Enums;
+using Sibers.MVC.ViewModels.Projects;
 using Sibers.Services.Services;
 
 namespace Sibers.MVC.Controllers;
@@ -7,6 +9,7 @@ namespace Sibers.MVC.Controllers;
 public class ProjectsController : Controller
 {
     private readonly ProjectService _projectService;
+    private const int PAGE_SIZE = 2;
 
     public ProjectsController(ProjectService projectService)
     {
@@ -14,12 +17,28 @@ public class ProjectsController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int page = 1, string sortField = "StartDate", bool ascending = true,
+        string? nameFilter = null,
+        Priority? priorityFilter = null,
+        DateTime? startDate = null,
+        DateTime? endDate = null)
     {
-        var projectsResult = await _projectService.GetAllAsync();
-        if (projectsResult.IsSuccess)
-            return View(projectsResult.Value);
-        return BadRequest(projectsResult.Error);
+        var total = await _projectService.Count();
+        var projects = await _projectService.GetPagedAsync(page, sortField, ascending, nameFilter, priorityFilter, startDate, endDate, PAGE_SIZE);
+
+        var model = new ProjectsListViewModel
+        {
+            Projects = projects,
+            CurrentPage = page,
+            TotalPages = (int)Math.Ceiling(total / (double)PAGE_SIZE),
+            SortField = sortField,
+            Ascending = ascending,
+            NameFilter = nameFilter,
+            PriorityFilter = priorityFilter,
+            StartDateFrom = startDate,
+            StartDateTo = endDate
+        };
+         return View(model);
     }
     [HttpGet]
     public async Task<IActionResult> Details(int id)

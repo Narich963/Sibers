@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Sibers.MVC.ViewModels;
+using Sibers.MVC.ViewModels.Users;
 using Sibers.Services.DTO;
 using Sibers.Services.Services;
 
@@ -15,19 +15,6 @@ public class UsersController : Controller
 
     [HttpGet]
     public async Task<IActionResult> Index() => View(await _userService.GetAllAsync());
-
-    [HttpGet]
-    public async Task<IActionResult> Details(int? userId)
-    {
-        if (userId != null)
-        {
-            var userResult = await _userService.GetAsync(userId);
-            if (userResult.IsSuccess)
-                return View(userResult.Value);
-            return BadRequest(userResult.Error);
-        }
-        return NotFound();
-    }
 
     [HttpGet]
     public IActionResult Create() => View(new CreateUserViewModel());

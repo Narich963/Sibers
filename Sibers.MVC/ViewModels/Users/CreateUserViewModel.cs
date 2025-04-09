@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Sibers.MVC.ViewModels;
+namespace Sibers.MVC.ViewModels.Users;
 
 public class CreateUserViewModel
 {

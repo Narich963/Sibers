@@ -1,4 +1,6 @@
-﻿namespace Sibers.Core.Entities;
+﻿using Sibers.Core.Enums;
+
+namespace Sibers.Core.Entities;
 
 public class Project
 {
@@ -10,7 +12,7 @@ public class Project
 
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
-    public int Priority { get; set; }
+    public Priority Priority { get; set; } = Priority.Middle;
 
     public int? ManagerUserId { get; set; }
     public User? Manager { get; set; }
