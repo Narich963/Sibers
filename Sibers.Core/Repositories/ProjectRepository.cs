@@ -33,7 +33,7 @@ public class ProjectRepository : IRepository<Project>
         return await _context.Projects.Where(predicate).ToListAsync();
     }
 
-    public async Task<Project?> Get(int id) => await _context.Projects.FindAsync(id);
+    public async Task<Project?> Get(int id) => await _context.Projects.Include(p => p.Manager).Include(p => p.Employees).FirstOrDefaultAsync(p => p.Id == id);
 
     public async Task Create(Project entity)
     {

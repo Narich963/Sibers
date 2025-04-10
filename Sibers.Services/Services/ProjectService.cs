@@ -108,7 +108,7 @@ public class ProjectService
     }
     public async Task<int> Count() => await _uow.ProjectManager.Count();
 
-    public async Task<Result> SetManager(int? userId, int? projectId)
+    public async Task<Result> SetEmployee(int? userId, int? projectId, bool isManager)
     {
         if (userId == null)
             return Result.Failure("User id is null");
@@ -122,7 +122,15 @@ public class ProjectService
             if (project == null)
                 return Result.Failure($"No project with Id = {projectId} was found.");
 
-            project.ManagerUserId = userId;
+            if (isManager)
+                project.ManagerUserId = userId;
+            else
+                if (!project.Employees.Any(u => u.Id == user.Id))
+                    project.Employees.Add(user);
+                else
+                    return Result.Failure($"This project already has Employee {user.FirstName}");
+
+
             await _uow.SaveChangesAsync();
             return Result.Success();
         }

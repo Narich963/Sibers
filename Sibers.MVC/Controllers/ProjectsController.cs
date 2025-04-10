@@ -110,7 +110,14 @@ public class ProjectsController : Controller
     [HttpPost]
     public async Task<IActionResult> SetManager(int? userId, int? projectId)
     {
-        var result = await _projectService.SetManager(userId, projectId);
+        var result = await _projectService.SetEmployee(userId, projectId, true);
+        if (result.IsSuccess)
+            return RedirectToAction("Index");
+        return BadRequest();
+    }
+    public async Task<IActionResult> SetEmployee(int? userId, int? projectId)
+    {
+        var result = await _projectService.SetEmployee(userId, projectId, false);
         if (result.IsSuccess)
             return RedirectToAction("Index");
         return BadRequest();

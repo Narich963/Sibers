@@ -97,16 +97,16 @@
             <form asp-action="SetManager" method="post" class="d-flex align-items-center gap-2">
                 <input type="hidden" name="projectId" value="@project.Id" />
 
-                <label for="managerSelect_@project.Id" class="mb-0"><strong>Manager:</strong></label>
-                <p><strong>@(project.Manager == null ? "No manager" : project.Manager.FirstName)</strong></p>
+                <label for="managerSelect_@project.Id" class="mb-0"><strong>Manager:</strong>@(project.Manager == null ? " No manager" : " " + project.Manager.FirstName)</label>
                 @if (ViewBag.Users is List<User> users)
                 {
                     @if (users != null && users.Any())
                     {
                         <select id="managerSelect_@project.Id" name="userId" class="form-select form-select-sm w-auto">
+                            <option value="" selected></option>
                             @foreach (var user in users)
                             {
-                                <option value="@user.Id" selected="@(project.ManagerUserId == user.Id)">
+                                <option value="@user.Id">
                                     @user.LastName @user.FirstName
                                 </option>
                             }
@@ -118,7 +118,7 @@
                     }
                 }
 
-                <button type="submit" class="btn btn-outline-primary btn-sm">Выбрать</button>
+                <button type="submit" class="btn btn-outline-primary btn-sm set-manager-btn" data-project-id="@project.Id">Выбрать</button>
             </form>
             <p>
                 <strong>Employees:</strong>
@@ -166,3 +166,26 @@
         </ul>
     </nav>
 </div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(function () {
+            $('.set-manager-btn').click(function () {
+                const projectId = $(this).data('project-id');
+                const managerId = $(`#managerSelect_${projectId}`).val();
+
+                $.ajax({
+                    url: '/Projects/SetManager',
+                    type: 'POST',
+                    data: {userId: managerId, projectId: projectId},
+                    success: function () {
+                    },
+                    error: function () {
+                        alert("An error occured while trying to set the manager.");
+                    }
+                });
+            });
+        });
+    </script>
+}
