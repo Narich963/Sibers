@@ -48,7 +48,7 @@ public class ProjectRepository : IRepository<Project>
 
     public void Delete(int id)
     {
-        var project = _context.Projects.Find(id.ToString());
+        var project = _context.Projects.Find(id);
         if (project != null)
             _context.Projects.Remove(project);
     }

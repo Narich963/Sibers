@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Sibers.Core.Entities;
 using Sibers.Core.Enums;
 using Sibers.MVC.ViewModels.Projects;
@@ -6,6 +7,7 @@ using Sibers.Services.Services;
 
 namespace Sibers.MVC.Controllers;
 
+[Authorize]
 public class ProjectsController : Controller
 {
     private readonly ProjectService _projectService;
@@ -65,8 +67,7 @@ public class ProjectsController : Controller
         {
             var projectResult = await _projectService.CreateAsync(project);
             if (projectResult.IsSuccess)
-                return RedirectToAction("Details", new { id = projectResult.Value.Id });
-            TempData["Error"] = projectResult.Error;
+                return RedirectToAction("Index");
         }
         return View();
     }
@@ -88,7 +89,7 @@ public class ProjectsController : Controller
         {
             var projectResult = await _projectService.Update(newProject);
             if (projectResult.IsSuccess)
-                return RedirectToAction("Details", new { id = projectResult.Value.Id });
+                return RedirectToAction("Index");
             return BadRequest(projectResult.Error);
         }
         return View(newProject);

@@ -30,6 +30,11 @@ builder.Services.AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork));
 builder.Services.AddTransient(typeof(UserService));
 builder.Services.AddTransient(typeof(ProjectService));
 
+builder.Services.ConfigureApplicationCookie(opts =>
+{
+    opts.LoginPath = "/Users/Login";
+});
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -49,14 +54,14 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+    pattern: "{controller=Projects}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 

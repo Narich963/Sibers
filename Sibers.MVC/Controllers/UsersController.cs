@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Sibers.MVC.ViewModels.Users;
 using Sibers.Services.DTO;
 using Sibers.Services.Services;
 
 namespace Sibers.MVC.Controllers;
 
+[Authorize]
 public class UsersController : Controller
 {
     private readonly UserService _userService;
@@ -47,9 +49,11 @@ public class UsersController : Controller
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult Login() => View(new LoginViewModel());
 
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> Login(LoginViewModel model)
     {
         if (ModelState.IsValid)
@@ -65,6 +69,13 @@ public class UsersController : Controller
             return BadRequest();
         }
         return View(model);
+    }
+    public async Task<IActionResult> Logout()
+    {
+        var result = await _userService.Logout();
+        if (result.IsSuccess)
+            return RedirectToAction("Login", "Users");
+        return BadRequest();
     }
 
     [HttpGet]

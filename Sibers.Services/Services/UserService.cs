@@ -15,13 +15,13 @@ public class UserService
         _uow = uow;
     }
 
-    public async Task<Result<List<User>>> GetAllAsync() => Result.Success(await _uow.UserManager.Users.ToListAsync());
+    public async Task<Result<List<User>>> GetAllAsync() => Result.Success(await _uow.UserManager.Users.Include(p => p.Projects).ToListAsync());
 
     public async Task<Result<User>> GetAsync(int? id)
     {
         if (id != null)
         {
-            var user = await _uow.UserManager.FindByIdAsync(id.Value.ToString());
+            var user = await _uow.UserManager.Users.Include(u => u.Projects).FirstOrDefaultAsync(u => u.Id == id);
             if (user != null)
                 return Result.Success(user);
             return Result.Failure<User>($"The user with Id = {id} was not found.");
@@ -68,6 +68,12 @@ public class UserService
             }
         }
         return Result.Failure<User>("Failed to login.");
+    }
+
+    public async Task<Result> Logout()
+    {
+        await _uow.SignInManager.SignOutAsync();
+        return Result.Success();
     }
 
     public async Task<Result<User>> Edit(UserDTO userDto)
