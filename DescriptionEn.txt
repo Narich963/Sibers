@@ -1,0 +1,25 @@
+About the project:
+	- This solution is written in Visual Studio 2022.
+	- The solution consists of 3 projects: Sibers.MVC, Sibers.Core, Sibers.Services.
+	- This project is built on the .NET 9.0 platform.
+
+How to run the project:
+	1) If you received an archive with the application and are reading this paragraph, 
+	  you have most likely already extracted the archive. 
+	  If not, the first thing you need to do is extract the archive.
+	2) Make sure that the .NET 9.0 SDK is installed on your computer 
+	   (you can download it from this link: https://dotnet.microsoft.com/ru-ru/download). 
+	   Once you have downloaded it (or if it was already installed), 
+	   open the Command Prompt (Win + R, cmd) and 
+	   enter the command dotnet --version to check the version of your SDK. If everything is correct, move on to the next step.
+	3) Open the solution file using an IDE like Visual Studio 2022, Rider, etc
+	4) In the command line, in the folder with the projects, enter the command dotnet restore to download all the required dependencies and libraries.
+	5) Select Sibers.MVC as the startup project and run it.
+
+About the project architecture:
+	- This project follows a three-tier architecture, meaning it has a data access layer, a business logic layer, and a presentation layer.
+	- The solution consists of 3 projects:
+		1) Sibers.MVC (Presentation Layer, User Interface),
+		2) Sibers.Services (Business Logic Layer),
+		3) Sibers.Core (Data Access Layer, Database Access).
+	- This project uses SQLite as the database.
