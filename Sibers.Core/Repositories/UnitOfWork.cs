@@ -4,6 +4,9 @@ using Sibers.Core.Interfaces;
 
 namespace Sibers.Core.Repositories;
 
+/// <summary>
+/// A Unit of work that allows you to work with Users and Projects
+/// </summary>
 public class UnitOfWork : IUnitOfWork
 {
     private readonly UserManager<User> _userManager;

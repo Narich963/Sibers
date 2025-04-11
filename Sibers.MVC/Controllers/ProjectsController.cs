@@ -20,6 +20,17 @@ public class ProjectsController : Controller
         _userService = userService;
     }
 
+    /// <summary>
+    /// Page of all projects
+    /// </summary>
+    /// <param name="page"></param>
+    /// <param name="sortField"></param>
+    /// <param name="ascending"></param>
+    /// <param name="nameFilter"></param>
+    /// <param name="priorityFilter"></param>
+    /// <param name="startDate"></param>
+    /// <param name="endDate"></param>
+    /// <returns></returns>
     [HttpGet]
     public async Task<IActionResult> Index(int page = 1, string sortField = "StartDate", bool ascending = true,
         string? nameFilter = null,
@@ -48,6 +59,12 @@ public class ProjectsController : Controller
 
          return View(model);
     }
+
+    /// <summary>
+    /// Detailed page of one project
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpGet]
     public async Task<IActionResult> Details(int id)
     {
@@ -108,6 +125,12 @@ public class ProjectsController : Controller
         return NotFound();
     }
 
+    /// <summary>
+    /// An action to set an manager to the project
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="projectId"></param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> SetManager(int? userId, int? projectId)
     {
@@ -116,6 +139,13 @@ public class ProjectsController : Controller
             return Ok();
         return BadRequest();
     }
+
+    /// <summary>
+    /// An action to set an employee to the project
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="projectId"></param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> SetEmployee(int? userId, int? projectId)
     {
@@ -125,6 +155,12 @@ public class ProjectsController : Controller
         return BadRequest();
     }
 
+    /// <summary>
+    /// An action to remove the employee from the project
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="projectId"></param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> RemoveEmployee(int? userId, int? projectId)
     {
@@ -134,6 +170,11 @@ public class ProjectsController : Controller
         return BadRequest(result.Error);
     }
 
+    /// <summary>
+    /// An action to get all Users by search
+    /// </summary>
+    /// <param name="search"></param>
+    /// <returns></returns>
     [HttpGet]
     public async Task<IActionResult> SearchUsers(string search)
     {

@@ -1,5 +1,8 @@
 ﻿namespace Sibers.Services.DTO;
 
+/// <summary>
+/// Data transfer object of User entity
+/// </summary>
 public class UserDTO
 {
     public string Email { get; set; }

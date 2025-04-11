@@ -15,6 +15,10 @@ public class UsersController : Controller
         _userService = userService;
     }
 
+    /// <summary>
+    /// Page with all the users
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public async Task<IActionResult> Index()
     {
@@ -22,7 +26,6 @@ public class UsersController : Controller
         return View(result.Value);
     }
         
-
     [HttpGet]
     public IActionResult Create() => View(new CreateUserViewModel());
 

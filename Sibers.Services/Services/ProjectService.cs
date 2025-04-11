@@ -7,6 +7,9 @@ using System.Linq.Expressions;
 
 namespace Sibers.Services.Services;
 
+/// <summary>
+/// Service for working with projects
+/// </summary>
 public class ProjectService
 {
     private readonly IUnitOfWork _uow;
@@ -17,6 +20,18 @@ public class ProjectService
 
     public async Task<Result<IEnumerable<Project>>> GetAllAsync() => Result.Success(await _uow.ProjectManager.GetAllAsync());
 
+    /// <summary>
+    /// Get all sorted projects with filter
+    /// </summary>
+    /// <param name="page">Current page</param>
+    /// <param name="sortField">Field that all projects are ordered by</param>
+    /// <param name="ascending">Is ascending or descenging order</param>
+    /// <param name="name">Project name</param>
+    /// <param name="priority">Project priority</param>
+    /// <param name="startDate">Date from</param>
+    /// <param name="endDate">Date to</param>
+    /// <param name="pageSize">How man items are in this page</param>
+    /// <returns>Sorted projects with filter</returns>
     public async Task<IEnumerable<Project>> GetPagedAsync(
         int page,
         string sortField = "StartDate",
@@ -108,6 +123,13 @@ public class ProjectService
     }
     public async Task<int> Count() => await _uow.ProjectManager.Count();
 
+    /// <summary>
+    /// Set employee to the project
+    /// </summary>
+    /// <param name="userId">Employee Id</param>
+    /// <param name="projectId">Project Id</param>
+    /// <param name="isManager">Should set as employee or as manager</param>
+    /// <returns></returns>
     public async Task<Result> SetEmployee(int? userId, int? projectId, bool isManager)
     {
         if (userId == null)
@@ -136,6 +158,13 @@ public class ProjectService
         }
         return Result.Failure("Failed to set a new manager to this project.");
     }
+
+    /// <summary>
+    /// Remove an employee from the project
+    /// </summary>
+    /// <param name="userId">Employee Id</param>
+    /// <param name="projectId">ProjectId</param>
+    /// <returns></returns>
     public async Task<Result> RemoveEmployee(int? userId, int? projectId)
     {
         if (!userId.HasValue || !projectId.HasValue)

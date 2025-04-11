@@ -7,6 +7,9 @@ using Sibers.Services.DTO;
 
 namespace Sibers.Services.Services;
 
+/// <summary>
+/// Service for Users logic
+/// </summary>
 public class UserService
 {
     private readonly IUnitOfWork _uow;

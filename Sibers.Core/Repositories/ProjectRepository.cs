@@ -5,6 +5,9 @@ using Sibers.Core.Interfaces;
 
 namespace Sibers.Core.Repositories;
 
+/// <summary>
+/// The repository for interaction with Project entities
+/// </summary>
 public class ProjectRepository : IRepository<Project>
 {
     private readonly SibersContext _context;
@@ -13,6 +16,7 @@ public class ProjectRepository : IRepository<Project>
         _context = context;
     }
 
+    /// <inheritdoc/>
     public async Task<IEnumerable<Project>> GetAllAsync()
     {
         return await _context.Projects
@@ -20,6 +24,8 @@ public class ProjectRepository : IRepository<Project>
                     .Include(p => p.Employees)
                     .ToListAsync();
     }
+
+    /// <inheritdoc/>
     public IQueryable<Project> GetAllAsQueryable()
     {
         return _context.Projects
@@ -28,34 +34,36 @@ public class ProjectRepository : IRepository<Project>
             .AsQueryable();
     }
 
-    public async Task<IEnumerable<Project>> FindAsync(Expression<Func<Project, bool>> predicate)
-    {
-        return await _context.Projects.Where(predicate).ToListAsync();
-    }
-
+    /// <inheritdoc/>
     public async Task<Project?> Get(int id) => await _context.Projects.Include(p => p.Manager).Include(p => p.Employees).FirstOrDefaultAsync(p => p.Id == id);
 
+    /// <inheritdoc/>
     public async Task Create(Project entity)
     {
         await _context.AddAsync(entity);
     }
 
+    /// <inheritdoc/>
     public void Update(Project entity)
     {
         if (entity != null)
             _context.Update(entity);
     }
 
+    /// <inheritdoc/>
     public void Delete(int id)
     {
         var project = _context.Projects.Find(id);
         if (project != null)
             _context.Projects.Remove(project);
     }
+
+    /// <inheritdoc/>
     public async Task SaveAsync()
     {
         await _context.SaveChangesAsync();
     }
+
+    /// <inheritdoc/>
     public async Task<int> Count() => await _context.Projects.CountAsync();
-    
 }
