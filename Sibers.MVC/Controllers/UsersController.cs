@@ -27,9 +27,11 @@ public class UsersController : Controller
     }
         
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult Create() => View(new CreateUserViewModel());
 
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> Create(CreateUserViewModel model)
     {
         if (ModelState.IsValid)
@@ -45,7 +47,7 @@ public class UsersController : Controller
 
             var userResult = await _userService.CreateAsync(userDto);
             if (userResult.IsSuccess)
-                return RedirectToAction("Details", new { userId = userResult.Value.Id });
+                return RedirectToAction("Index");
             return BadRequest(userResult.Error);
         }
         return View();
