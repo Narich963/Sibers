@@ -69,4 +69,33 @@ public class UserService
         }
         return Result.Failure<User>("Failed to login.");
     }
+
+    public async Task<Result<User>> Edit(UserDTO userDto)
+    {
+        if (userDto != null)
+        {
+            var user = await _uow.UserManager.FindByEmailAsync(userDto.Email);
+
+            if (user == null)
+                return Result.Failure<User>("Failed to edit the user.");
+
+            user.Email = userDto.Email;
+            user.FirstName = userDto.FirstName;
+            user.MiddleName = userDto.MiddleName;
+            user.LastName = userDto.LastName;
+
+            var result = await _uow.UserManager.UpdateAsync(user);
+            if (!result.Succeeded)
+                return Result.Failure<User>("Failed to edit the user.");
+
+            if (!string.IsNullOrEmpty(userDto.Password))
+            {
+                var token = await _uow.UserManager.GeneratePasswordResetTokenAsync(user);
+                var passwordResult = await _uow.UserManager.ResetPasswordAsync(user, token, userDto.Password);
+                if (passwordResult.Succeeded)
+                    return Result.Success(user);
+            }
+        }
+        return Result.Failure<User>("Failed to edit the user.");
+    }
 }

@@ -4,6 +4,7 @@ using Sibers.Core;
 using Sibers.Core.Entities;
 using Sibers.Core.Interfaces;
 using Sibers.Core.Repositories;
+using Sibers.MVC.Initializers;
 using Sibers.Services.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,7 +22,8 @@ builder.Services.AddDbContext<SibersContext>(opts => opts.UseSqlite(connection, 
                     opts.Password.RequireUppercase = false;
                     opts.Password.RequireLowercase = false;
                 })
-                .AddEntityFrameworkStores<SibersContext>();
+                .AddEntityFrameworkStores<SibersContext>()
+                .AddDefaultTokenProviders();
 
 builder.Services.AddTransient(typeof(IRepository<Project>), typeof(ProjectRepository));
 builder.Services.AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork));
@@ -29,6 +31,12 @@ builder.Services.AddTransient(typeof(UserService));
 builder.Services.AddTransient(typeof(ProjectService));
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await DbInitializer.SeedUsersAsync(services);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

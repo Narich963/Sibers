@@ -14,7 +14,12 @@ public class UsersController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index() => View(await _userService.GetAllAsync());
+    public async Task<IActionResult> Index()
+    {
+        var result = await _userService.GetAllAsync();
+        return View(result.Value);
+    }
+        
 
     [HttpGet]
     public IActionResult Create() => View(new CreateUserViewModel());
@@ -60,5 +65,55 @@ public class UsersController : Controller
             return BadRequest();
         }
         return View(model);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Edit(int? id)
+    {
+        var userResult = await _userService.GetAsync(id);
+        if (userResult.IsSuccess)
+        {
+            var model = new CreateUserViewModel
+            {
+                Email = userResult.Value?.Email,
+                FirstName = userResult.Value?.FirstName,
+                MiddleName = userResult.Value?.MiddleName,
+                LastName = userResult.Value?.LastName,
+            };
+            return View(model);
+        }
+        return NotFound(userResult.Error);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Edit(CreateUserViewModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var userDto = new UserDTO
+            {
+                Email = model.Email,
+                FirstName = model.FirstName,
+                MiddleName = model.MiddleName,
+                LastName = model.LastName,
+                Password = model.Password
+            };
+
+            var result = await _userService.Edit(userDto);
+
+            if (result.IsSuccess)
+                return RedirectToAction("Index");
+            return BadRequest();
+        }
+        return View(model);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Details(int? id)
+    {
+        var userResult = await _userService.GetAsync(id);
+        if (userResult.IsSuccess)
+            return View(userResult.Value);
+        return NotFound(userResult.Error);
     }
 }

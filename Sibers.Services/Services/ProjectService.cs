@@ -136,4 +136,20 @@ public class ProjectService
         }
         return Result.Failure("Failed to set a new manager to this project.");
     }
+    public async Task<Result> RemoveEmployee(int? userId, int? projectId)
+    {
+        if (!userId.HasValue || !projectId.HasValue)
+            return Result.Failure("");
+
+        var user = await _uow.UserManager.FindByIdAsync(userId.Value.ToString());
+        var project = await _uow.ProjectManager.Get(projectId.Value);
+        if (user != null && project != null)
+        {
+            project.Employees.Remove(user);
+            await _uow.SaveChangesAsync();
+            return Result.Success();
+        }
+        return Result.Failure($"Failed to remove {user.FirstName} from {project.Name}");
+    }
+
 }

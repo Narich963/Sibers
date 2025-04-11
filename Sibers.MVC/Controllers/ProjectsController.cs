@@ -112,14 +112,45 @@ public class ProjectsController : Controller
     {
         var result = await _projectService.SetEmployee(userId, projectId, true);
         if (result.IsSuccess)
-            return RedirectToAction("Index");
+            return Ok();
         return BadRequest();
     }
+    [HttpPost]
     public async Task<IActionResult> SetEmployee(int? userId, int? projectId)
     {
         var result = await _projectService.SetEmployee(userId, projectId, false);
         if (result.IsSuccess)
-            return RedirectToAction("Index");
+            return Ok();
+        return BadRequest();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> RemoveEmployee(int? userId, int? projectId)
+    {
+        var result = await _projectService.RemoveEmployee(userId, projectId);
+        if (result.IsSuccess)
+            return Ok();
+        return BadRequest(result.Error);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> SearchUsers(string search)
+    {
+        var usersResult = await _userService.GetAllAsync();
+        if (usersResult.IsSuccess)
+        {
+            var users = usersResult.Value;
+
+            if (string.IsNullOrEmpty(search))
+                return Json(users);
+
+            var searchUsers = users.
+                Where(u => ($"{u.FirstName} {u.MiddleName} {u.LastName}").ToLower().Contains(search.ToLower()))
+                .Select(u => new { u.Id, u.FirstName, u.LastName})
+                .ToList();
+
+            return Json(searchUsers);
+        }
         return BadRequest();
     }
 }
