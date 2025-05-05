@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Sibers.MVC.ViewModels.Users;
 using Sibers.Services.DTO;
+using Sibers.Services.Interfaces;
 using Sibers.Services.Services;
 
 namespace Sibers.MVC.Controllers;
@@ -9,8 +10,8 @@ namespace Sibers.MVC.Controllers;
 [Authorize]
 public class UsersController : Controller
 {
-    private readonly UserService _userService;
-    public UsersController(UserService userService)
+    private readonly IUserService _userService;
+    public UsersController(IUserService userService)
     {
         _userService = userService;
     }

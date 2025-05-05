@@ -5,6 +5,7 @@ using Sibers.Core.Entities;
 using Sibers.Core.Interfaces;
 using Sibers.Core.Repositories;
 using Sibers.MVC.Initializers;
+using Sibers.Services.Interfaces;
 using Sibers.Services.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,8 +28,8 @@ builder.Services.AddDbContext<SibersContext>(opts => opts.UseSqlite(connection, 
 
 builder.Services.AddTransient(typeof(IRepository<Project>), typeof(ProjectRepository));
 builder.Services.AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork));
-builder.Services.AddTransient(typeof(UserService));
-builder.Services.AddTransient(typeof(ProjectService));
+builder.Services.AddTransient(typeof(IUserService), typeof(UserService));
+builder.Services.AddTransient(typeof(IProjectService), typeof(ProjectService));
 
 builder.Services.ConfigureApplicationCookie(opts =>
 {

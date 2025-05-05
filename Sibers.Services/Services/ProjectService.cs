@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Sibers.Core.Entities;
 using Sibers.Core.Enums;
 using Sibers.Core.Interfaces;
+using Sibers.Services.Interfaces;
 using System.Linq.Expressions;
 
 namespace Sibers.Services.Services;
@@ -10,7 +11,7 @@ namespace Sibers.Services.Services;
 /// <summary>
 /// Service for working with projects
 /// </summary>
-public class ProjectService
+public class ProjectService : IProjectService
 {
     private readonly IUnitOfWork _uow;
     public ProjectService(IUnitOfWork uow)

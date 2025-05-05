@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Sibers.Core.Entities;
 using Sibers.Core.Enums;
 using Sibers.MVC.ViewModels.Projects;
+using Sibers.Services.Interfaces;
 using Sibers.Services.Services;
 
 namespace Sibers.MVC.Controllers;
@@ -10,11 +11,11 @@ namespace Sibers.MVC.Controllers;
 [Authorize]
 public class ProjectsController : Controller
 {
-    private readonly ProjectService _projectService;
-    private readonly UserService _userService;
+    private readonly IProjectService _projectService;
+    private readonly IUserService _userService;
     private const int PAGE_SIZE = 2;
 
-    public ProjectsController(ProjectService projectService, UserService userService)
+    public ProjectsController(IProjectService projectService, IUserService userService)
     {
         _projectService = projectService;
         _userService = userService;

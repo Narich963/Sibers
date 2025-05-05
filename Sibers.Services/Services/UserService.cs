@@ -4,13 +4,14 @@ using Microsoft.EntityFrameworkCore;
 using Sibers.Core.Entities;
 using Sibers.Core.Interfaces;
 using Sibers.Services.DTO;
+using Sibers.Services.Interfaces;
 
 namespace Sibers.Services.Services;
 
 /// <summary>
 /// Service for Users logic
 /// </summary>
-public class UserService
+public class UserService : IUserService
 {
     private readonly IUnitOfWork _uow;
     public UserService(IUnitOfWork uow)
