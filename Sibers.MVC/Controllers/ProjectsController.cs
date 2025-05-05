@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Sibers.Core.Entities;
 using Sibers.Core.Enums;
 using Sibers.MVC.ViewModels.Projects;
+using Sibers.Services.DTO;
 using Sibers.Services.Interfaces;
 using Sibers.Services.Services;
 
@@ -13,12 +15,14 @@ public class ProjectsController : Controller
 {
     private readonly IProjectService _projectService;
     private readonly IUserService _userService;
+    private readonly IMapper _mapper;
     private const int PAGE_SIZE = 2;
 
-    public ProjectsController(IProjectService projectService, IUserService userService)
+    public ProjectsController(IProjectService projectService, IUserService userService, IMapper mapper)
     {
         _projectService = projectService;
         _userService = userService;
+        _mapper = mapper;
     }
 
     /// <summary>
@@ -79,11 +83,12 @@ public class ProjectsController : Controller
     public IActionResult Create() => View();
 
     [HttpPost]
-    public async Task<IActionResult> Create(Project project)
+    public async Task<IActionResult> Create(ProjectViewModel model)
     {
         if (ModelState.IsValid)
         {
-            var projectResult = await _projectService.CreateAsync(project);
+            var projectDTO = _mapper.Map<ProjectDTO>(model);
+            var projectResult = await _projectService.CreateAsync(projectDTO);
             if (projectResult.IsSuccess)
                 return RedirectToAction("Index");
         }
@@ -95,17 +100,23 @@ public class ProjectsController : Controller
     {
         if (!id.HasValue)
             return NotFound();
+
         var projectResult = await _projectService.GetAsync(id.Value);
+
         if (projectResult.IsSuccess)
-            return View(projectResult.Value);
+        {
+            var projectViewModel = _mapper.Map<ProjectViewModel>(projectResult.Value);
+            return View(projectViewModel);
+        }
         return BadRequest(projectResult.Error);
     }
     [HttpPost]
-    public async Task<IActionResult> Edit(Project newProject)
+    public async Task<IActionResult> Edit(ProjectViewModel newProject)
     {
         if (ModelState.IsValid)
         {
-            var projectResult = await _projectService.Update(newProject);
+            var projectDTO = _mapper.Map<ProjectDTO>(newProject);
+            var projectResult = await _projectService.Update(projectDTO);
             if (projectResult.IsSuccess)
                 return RedirectToAction("Index");
             return BadRequest(projectResult.Error);

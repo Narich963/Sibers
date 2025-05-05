@@ -6,8 +6,8 @@ namespace Sibers.Services.Interfaces;
 
 public interface IUserService
 {
-    Task<Result<List<User>>> GetAllAsync();
-    Task<Result<User>> GetAsync(int? id);
+    Task<Result<List<UserDTO>>> GetAllAsync();
+    Task<Result<UserDTO>> GetAsync(int? id);
     Task<Result<User>> CreateAsync(UserDTO userDto);
     Task<Result<User>> Login(UserDTO userDto);
     Task<Result> Logout();

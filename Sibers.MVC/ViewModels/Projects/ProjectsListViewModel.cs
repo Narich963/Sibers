@@ -1,11 +1,12 @@
 ﻿using Sibers.Core.Entities;
 using Sibers.Core.Enums;
+using Sibers.Services.DTO;
 
 namespace Sibers.MVC.ViewModels.Projects;
 
 public class ProjectsListViewModel
 {
-    public IEnumerable<Project> Projects { get; set; } = new List<Project>();
+    public IEnumerable<ProjectDTO> Projects { get; set; } = new List<ProjectDTO>();
 
     public int CurrentPage { get; set; }
     public int TotalPages { get; set; }

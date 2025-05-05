@@ -1,4 +1,5 @@
-﻿using CSharpFunctionalExtensions;
+﻿using AutoMapper;
+using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Sibers.Core.Entities;
@@ -14,37 +15,39 @@ namespace Sibers.Services.Services;
 public class UserService : IUserService
 {
     private readonly IUnitOfWork _uow;
-    public UserService(IUnitOfWork uow)
+    private readonly IMapper _mapper;
+
+    public UserService(IUnitOfWork uow, IMapper mapper)
     {
         _uow = uow;
+        _mapper = mapper;
     }
 
-    public async Task<Result<List<User>>> GetAllAsync() => Result.Success(await _uow.UserManager.Users.Include(p => p.Projects).ToListAsync());
+    public async Task<Result<List<UserDTO>>> GetAllAsync()
+    {
+        var users = await _uow.UserManager.Users.Include(p => p.Projects).ToListAsync();
+        return Result.Success(_mapper.Map<List<UserDTO>>(users));
+    }
 
-    public async Task<Result<User>> GetAsync(int? id)
+    public async Task<Result<UserDTO>> GetAsync(int? id)
     {
         if (id != null)
         {
             var user = await _uow.UserManager.Users.Include(u => u.Projects).FirstOrDefaultAsync(u => u.Id == id);
+            var userDTO = _mapper.Map<UserDTO>(user);
+
             if (user != null)
-                return Result.Success(user);
-            return Result.Failure<User>($"The user with Id = {id} was not found.");
+                return Result.Success(userDTO);
+            return Result.Failure<UserDTO>($"The user with Id = {id} was not found.");
         }
-        return Result.Failure<User>("User id is null.");
+        return Result.Failure<UserDTO>("User id is null.");
     }
 
     public async Task<Result<User>> CreateAsync(UserDTO userDto)
     {
         if (userDto != null)
         {
-            var user = new User
-            {
-                UserName = userDto.Email,
-                Email = userDto.Email,
-                FirstName = userDto.FirstName,
-                MiddleName = userDto.MiddleName,
-                LastName = userDto.LastName
-            };
+            var user = _mapper.Map<User>(userDto);
 
             var result = await _uow.UserManager.CreateAsync(user, userDto.Password);
             if (result.Succeeded)

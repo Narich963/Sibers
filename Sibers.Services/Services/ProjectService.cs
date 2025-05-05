@@ -1,8 +1,10 @@
-﻿using CSharpFunctionalExtensions;
+﻿using AutoMapper;
+using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 using Sibers.Core.Entities;
 using Sibers.Core.Enums;
 using Sibers.Core.Interfaces;
+using Sibers.Services.DTO;
 using Sibers.Services.Interfaces;
 using System.Linq.Expressions;
 
@@ -14,9 +16,12 @@ namespace Sibers.Services.Services;
 public class ProjectService : IProjectService
 {
     private readonly IUnitOfWork _uow;
-    public ProjectService(IUnitOfWork uow)
+    private readonly IMapper _mapper;
+
+    public ProjectService(IUnitOfWork uow, IMapper mapper)
     {
         _uow = uow;
+        _mapper = mapper;
     }
 
     public async Task<Result<IEnumerable<Project>>> GetAllAsync() => Result.Success(await _uow.ProjectManager.GetAllAsync());
@@ -33,7 +38,7 @@ public class ProjectService : IProjectService
     /// <param name="endDate">Date to</param>
     /// <param name="pageSize">How man items are in this page</param>
     /// <returns>Sorted projects with filter</returns>
-    public async Task<IEnumerable<Project>> GetPagedAsync(
+    public async Task<IEnumerable<ProjectDTO>> GetPagedAsync(
         int page,
         string sortField = "StartDate",
         bool ascending = true,
@@ -79,21 +84,28 @@ public class ProjectService : IProjectService
         else
             query = query.OrderByDescending(selectorKey);
 
-        return await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+        var projects = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+        var projectDTOs = _mapper.Map<List<ProjectDTO>>(projects);
+        return projectDTOs;
     }
 
-    public async Task<Result<Project>> GetAsync(int id)
+    public async Task<Result<ProjectDTO>> GetAsync(int id)
     {
         var project = await _uow.ProjectManager.Get(id);
         if (project != null)
-            return Result.Success(project);
-        return Result.Failure<Project>($"No project with Id = {id} was found.");
+        {
+            var projectDTO = _mapper.Map<ProjectDTO>(project);
+            return Result.Success(projectDTO);
+        }
+
+        return Result.Failure<ProjectDTO>($"No project with Id = {id} was found.");
     }
 
-    public async Task<Result<Project>> CreateAsync(Project project)
+    public async Task<Result<Project>> CreateAsync(ProjectDTO projectDTO)
     {
-        if (project != null)
+        if (projectDTO != null)
         {
+            var project = _mapper.Map<Project>(projectDTO);
             await _uow.ProjectManager.Create(project);
             await _uow.SaveChangesAsync();
             return Result.Success(project);
@@ -101,15 +113,16 @@ public class ProjectService : IProjectService
         return Result.Failure<Project>("The project is empty.");
     }
 
-    public async Task<Result<Project>> Update(Project project)
+    public async Task<Result<ProjectDTO>> Update(ProjectDTO projectDTO)
     {
-        if (project != null)
+        if (projectDTO != null)
         {
+            var project = _mapper.Map<Project>(projectDTO);
             _uow.ProjectManager.Update(project);
             await _uow.SaveChangesAsync();
-            return Result.Success(project);
+            return Result.Success(projectDTO);
         }
-        return Result.Failure<Project>($"An error occured while trying to update project with Id = {project.Id}.");
+        return Result.Failure<ProjectDTO>($"An error occured while trying to update project with Id = {projectDTO?.Id}.");
     }
 
     public async Task<Result> Delete(int? id)

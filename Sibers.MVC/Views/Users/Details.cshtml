@@ -1,5 +1,5 @@
-﻿@using Sibers.Core.Entities
-@model User
+﻿@using Sibers.MVC.ViewModels.Users
+@model UserViewModel
 
 <div class="container mt-4">
     <div class="card shadow-sm rounded">
@@ -8,9 +8,6 @@
         </div>
         <div class="card-body">
             <dl class="row">
-                <dt class="col-sm-3">Username</dt>
-                <dd class="col-sm-9">@Model.UserName</dd>
-
                 <dt class="col-sm-3">Email</dt>
                 <dd class="col-sm-9">@Model.Email</dd>
 

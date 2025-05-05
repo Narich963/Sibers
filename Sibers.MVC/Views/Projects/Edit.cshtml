@@ -1,11 +1,14 @@
-﻿@using Sibers.Core.Entities
-@using Sibers.Core.Enums
-@model Project
+﻿@using Sibers.Core.Enums
+@using Sibers.MVC.ViewModels.Projects
+@model ProjectViewModel
 
 <h2>Edit Project</h2>
 
 <form asp-action="Edit" method="post">
     <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="Employees"/>
+    <input type="hidden" asp-for="Manager"/>
+
 
     <div class="mb-3">
         <label asp-for="Name" class="form-label"></label>

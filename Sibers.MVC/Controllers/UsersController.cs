@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Sibers.MVC.ViewModels.Users;
 using Sibers.Services.DTO;
@@ -11,9 +12,12 @@ namespace Sibers.MVC.Controllers;
 public class UsersController : Controller
 {
     private readonly IUserService _userService;
-    public UsersController(IUserService userService)
+    private readonly IMapper _mapper;
+
+    public UsersController(IUserService userService, IMapper mapper)
     {
         _userService = userService;
+        _mapper = mapper;
     }
 
     /// <summary>
@@ -24,7 +28,8 @@ public class UsersController : Controller
     public async Task<IActionResult> Index()
     {
         var result = await _userService.GetAllAsync();
-        return View(result.Value);
+        var usersViewModel = _mapper.Map<List<UserViewModel>>(result.Value);
+        return View(usersViewModel);
     }
         
     [HttpGet]
@@ -37,14 +42,7 @@ public class UsersController : Controller
     {
         if (ModelState.IsValid)
         {
-            var userDto = new UserDTO
-            {
-                Email = model.Email,
-                FirstName = model.FirstName,
-                MiddleName = model.MiddleName,
-                LastName = model.LastName,
-                Password = model.Password
-            };
+            var userDto = _mapper.Map<UserDTO>(model);
 
             var userResult = await _userService.CreateAsync(userDto);
             if (userResult.IsSuccess)
@@ -64,11 +62,7 @@ public class UsersController : Controller
     {
         if (ModelState.IsValid)
         {
-            var userDto = new UserDTO
-            {
-                Email = model.Email,
-                Password = model.Password
-            };
+            var userDto = _mapper.Map<UserDTO>(model);
             var loginResult = await _userService.Login(userDto);
             if (loginResult.IsSuccess)
                 return RedirectToAction("Index", "Projects");
@@ -90,13 +84,7 @@ public class UsersController : Controller
         var userResult = await _userService.GetAsync(id);
         if (userResult.IsSuccess)
         {
-            var model = new CreateUserViewModel
-            {
-                Email = userResult.Value?.Email,
-                FirstName = userResult.Value?.FirstName,
-                MiddleName = userResult.Value?.MiddleName,
-                LastName = userResult.Value?.LastName,
-            };
+            var model = _mapper.Map<CreateUserViewModel>(userResult.Value);
             return View(model);
         }
         return NotFound(userResult.Error);
@@ -107,14 +95,7 @@ public class UsersController : Controller
     {
         if (ModelState.IsValid)
         {
-            var userDto = new UserDTO
-            {
-                Email = model.Email,
-                FirstName = model.FirstName,
-                MiddleName = model.MiddleName,
-                LastName = model.LastName,
-                Password = model.Password
-            };
+            var userDto = _mapper.Map<UserDTO>(model);
 
             var result = await _userService.Edit(userDto);
 
@@ -130,7 +111,10 @@ public class UsersController : Controller
     {
         var userResult = await _userService.GetAsync(id);
         if (userResult.IsSuccess)
-            return View(userResult.Value);
+        {
+            var userViewModel = _mapper.Map<UserViewModel>(userResult.Value);
+            return View(userViewModel);
+        }
         return NotFound(userResult.Error);
     }
 }

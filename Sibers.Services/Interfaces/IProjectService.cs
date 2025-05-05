@@ -1,13 +1,14 @@
 ﻿using CSharpFunctionalExtensions;
 using Sibers.Core.Entities;
 using Sibers.Core.Enums;
+using Sibers.Services.DTO;
 
 namespace Sibers.Services.Interfaces;
 
 public interface IProjectService
 {
     Task<Result<IEnumerable<Project>>> GetAllAsync();
-    Task<IEnumerable<Project>> GetPagedAsync(int page,
+    Task<IEnumerable<ProjectDTO>> GetPagedAsync(int page,
         string sortField,
         bool ascending,
         string? name,
@@ -15,9 +16,9 @@ public interface IProjectService
         DateTime? startDate,
         DateTime? endDate,
         int pageSize);
-    Task<Result<Project>> GetAsync(int id);
-    Task<Result<Project>> CreateAsync(Project project);
-    Task<Result<Project>> Update(Project project);
+    Task<Result<ProjectDTO>> GetAsync(int id);
+    Task<Result<Project>> CreateAsync(ProjectDTO project);
+    Task<Result<ProjectDTO>> Update(ProjectDTO project);
     Task<Result> Delete(int? id);
     Task<int> Count();
     Task<Result> SetEmployee(int? userId, int? projectId, bool isManager);

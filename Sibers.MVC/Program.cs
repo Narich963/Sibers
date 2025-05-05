@@ -26,6 +26,8 @@ builder.Services.AddDbContext<SibersContext>(opts => opts.UseSqlite(connection, 
                 .AddEntityFrameworkStores<SibersContext>()
                 .AddDefaultTokenProviders();
 
+builder.Services.AddAutoMapper(typeof(AutoMapperInitializer));
+
 builder.Services.AddTransient(typeof(IRepository<Project>), typeof(ProjectRepository));
 builder.Services.AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork));
 builder.Services.AddTransient(typeof(IUserService), typeof(UserService));

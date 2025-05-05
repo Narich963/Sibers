@@ -1,5 +1,5 @@
-﻿@using Sibers.Core.Entities
-@model List<User>
+﻿@using Sibers.MVC.ViewModels.Users
+@model List<UserViewModel>
 
 <div class="container mt-5">
     <h2 class="mb-4 text-center">User List</h2>
@@ -27,7 +27,7 @@
                         <td>@user.MiddleName</td>
                         <td>@user.Email</td>
                         <td>
-                            <span class="badge bg-primary">@(user.Projects?.Count ?? 0)</span>
+                            <span class="badge bg-primary">@(user.Projects.Count)</span>
                         </td>
                         <td class="text-center">
                             <a href="@Url.Action("Details", "Users", new { id = user.Id })" class="btn btn-outline-info btn-sm me-2">
