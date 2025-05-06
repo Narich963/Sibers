@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sibers.Core;
 
@@ -10,9 +11,11 @@ using Sibers.Core;
 namespace Sibers.MVC.Migrations
 {
     [DbContext(typeof(SibersContext))]
-    partial class SibersContextModelSnapshot : ModelSnapshot
+    [Migration("20250506045236_Added_Avatar")]
+    partial class Added_Avatar
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.3");

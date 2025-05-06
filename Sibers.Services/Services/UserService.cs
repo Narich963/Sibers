@@ -6,6 +6,7 @@ using Sibers.Core.Entities;
 using Sibers.Core.Interfaces;
 using Sibers.Services.DTO;
 using Sibers.Services.Interfaces;
+using System.Security.Claims;
 
 namespace Sibers.Services.Services;
 
@@ -51,7 +52,10 @@ public class UserService : IUserService
 
             var result = await _uow.UserManager.CreateAsync(user, userDto.Password);
             if (result.Succeeded)
+            {
+                await AddAvatarClaim(user);
                 return Result.Success(user);
+            }
             return Result.Failure<User>("Creating a new user was failed.");
         }
         return Result.Failure<User>("The user you want to create is null.");
@@ -71,7 +75,10 @@ public class UserService : IUserService
                     lockoutOnFailure: false);
 
                 if (result.Succeeded)
+                {
+                    await AddAvatarClaim(user);
                     return Result.Success(user);
+                }
             }
         }
         return Result.Failure<User>("Failed to login.");
@@ -96,6 +103,7 @@ public class UserService : IUserService
             user.FirstName = userDto.FirstName;
             user.MiddleName = userDto.MiddleName;
             user.LastName = userDto.LastName;
+            user.Avatar = userDto.Avatar;
 
             var result = await _uow.UserManager.UpdateAsync(user);
             if (!result.Succeeded)
@@ -106,9 +114,31 @@ public class UserService : IUserService
                 var token = await _uow.UserManager.GeneratePasswordResetTokenAsync(user);
                 var passwordResult = await _uow.UserManager.ResetPasswordAsync(user, token, userDto.Password);
                 if (passwordResult.Succeeded)
+                {
+                    await AddAvatarClaim(user);
                     return Result.Success(user);
+                }
+
             }
         }
         return Result.Failure<User>("Failed to edit the user.");
+    }
+
+    public async Task AddAvatarClaim(User user)
+    {
+        var existingClaims = await _uow.UserManager.GetClaimsAsync(user);
+
+        var avatarClaims = existingClaims.Where(c => c.Type == "Avatar").ToList();
+
+        foreach (var claim in avatarClaims)
+        {
+            await _uow.UserManager.RemoveClaimAsync(user, claim);
+        }
+
+        var avatarClaim = new Claim("Avatar", user.Avatar);
+        var result = await _uow.UserManager.AddClaimAsync(user, avatarClaim);
+
+        await _uow.SignInManager.SignInAsync(user, isPersistent: false);
+        await _uow.UserManager.UpdateSecurityStampAsync(user);
     }
 }

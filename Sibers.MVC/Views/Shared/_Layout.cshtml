@@ -15,7 +15,7 @@
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Sibers.MVC</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
@@ -34,6 +34,21 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark">Welcome @User.Identity.Name</a>
                             </li>
+
+                            var avatar = User.FindFirst("Avatar")?.Value;
+
+                            if (!string.IsNullOrWhiteSpace(avatar))
+                            {
+                                <li class="nav-item">
+                                    <img src="@avatar" alt="User Avatar" class="avatar-image" width="40" height="40" />
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <img src="https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3467.jpg" alt="User Avatar" class="avatar-image" width="40" height="40" />
+                                </li>
+                            }
                         }
                         else
                         {

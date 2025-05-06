@@ -17,7 +17,7 @@ public class SibersContext : IdentityDbContext<User, IdentityRole<int>, int>
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-
+    
         builder.Entity<Project>()
             .HasMany(e => e.Employees)
             .WithMany(p => p.Projects)
@@ -33,5 +33,8 @@ public class SibersContext : IdentityDbContext<User, IdentityRole<int>, int>
             .HasForeignKey(p => p.ManagerUserId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        builder.Entity<User>()
+            .Property(x => x.Avatar)
+            .HasMaxLength(500);
     }
 }

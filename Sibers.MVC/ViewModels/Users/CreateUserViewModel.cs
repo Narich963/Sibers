@@ -13,6 +13,7 @@ public class CreateUserViewModel
     public string MiddleName { get; set; }
     [Required]
     public string LastName { get; set; }
+    public string Avatar { get; set; }
 
     [Required]
     [DataType(DataType.Password)]
