@@ -44,7 +44,7 @@ public class UserService : IUserService
         return Result.Failure<UserDTO>("User id is null.");
     }
 
-    public async Task<Result<User>> CreateAsync(UserDTO userDto)
+    public async Task<Result<UserDTO>> CreateAsync(UserDTO userDto)
     {
         if (userDto != null)
         {
@@ -53,15 +53,14 @@ public class UserService : IUserService
             var result = await _uow.UserManager.CreateAsync(user, userDto.Password);
             if (result.Succeeded)
             {
-                await AddAvatarClaim(user);
-                return Result.Success(user);
+                return Result.Success(userDto);
             }
-            return Result.Failure<User>("Creating a new user was failed.");
+            return Result.Failure<UserDTO>("Creating a new user was failed.");
         }
-        return Result.Failure<User>("The user you want to create is null.");
+        return Result.Failure<UserDTO>("The user you want to create is null.");
     }
 
-    public async Task<Result<User>> Login(UserDTO userDTO)
+    public async Task<Result<UserDTO>> Login(UserDTO userDTO)
     {
         if (userDTO != null)
         {
@@ -76,12 +75,11 @@ public class UserService : IUserService
 
                 if (result.Succeeded)
                 {
-                    await AddAvatarClaim(user);
-                    return Result.Success(user);
+                    return Result.Success(userDTO);
                 }
             }
         }
-        return Result.Failure<User>("Failed to login.");
+        return Result.Failure<UserDTO>("Failed to login.");
     }
 
     public async Task<Result> Logout()
@@ -90,14 +88,14 @@ public class UserService : IUserService
         return Result.Success();
     }
 
-    public async Task<Result<User>> Edit(UserDTO userDto)
+    public async Task<Result<UserDTO>> Edit(UserDTO userDto)
     {
         if (userDto != null)
         {
             var user = await _uow.UserManager.FindByEmailAsync(userDto.Email);
 
             if (user == null)
-                return Result.Failure<User>("Failed to edit the user.");
+                return Result.Failure<UserDTO>("Failed to edit the user.");
 
             user.Email = userDto.Email;
             user.FirstName = userDto.FirstName;
@@ -107,7 +105,7 @@ public class UserService : IUserService
 
             var result = await _uow.UserManager.UpdateAsync(user);
             if (!result.Succeeded)
-                return Result.Failure<User>("Failed to edit the user.");
+                return Result.Failure<UserDTO>("Failed to edit the user.");
 
             if (!string.IsNullOrEmpty(userDto.Password))
             {
@@ -115,30 +113,11 @@ public class UserService : IUserService
                 var passwordResult = await _uow.UserManager.ResetPasswordAsync(user, token, userDto.Password);
                 if (passwordResult.Succeeded)
                 {
-                    await AddAvatarClaim(user);
-                    return Result.Success(user);
+                    return Result.Success(userDto);
                 }
 
             }
         }
-        return Result.Failure<User>("Failed to edit the user.");
-    }
-
-    public async Task AddAvatarClaim(User user)
-    {
-        var existingClaims = await _uow.UserManager.GetClaimsAsync(user);
-
-        var avatarClaims = existingClaims.Where(c => c.Type == "Avatar").ToList();
-
-        foreach (var claim in avatarClaims)
-        {
-            await _uow.UserManager.RemoveClaimAsync(user, claim);
-        }
-
-        var avatarClaim = new Claim("Avatar", user.Avatar);
-        var result = await _uow.UserManager.AddClaimAsync(user, avatarClaim);
-
-        await _uow.SignInManager.SignInAsync(user, isPersistent: false);
-        await _uow.UserManager.UpdateSecurityStampAsync(user);
+        return Result.Failure<UserDTO>("Failed to edit the user.");
     }
 }

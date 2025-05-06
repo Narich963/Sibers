@@ -7,7 +7,7 @@ namespace Sibers.Services.Interfaces;
 
 public interface IProjectService
 {
-    Task<Result<IEnumerable<Project>>> GetAllAsync();
+    Task<Result<IEnumerable<ProjectDTO>>> GetAllAsync();
     Task<IEnumerable<ProjectDTO>> GetPagedAsync(int page,
         string sortField,
         bool ascending,
@@ -17,7 +17,7 @@ public interface IProjectService
         DateTime? endDate,
         int pageSize);
     Task<Result<ProjectDTO>> GetAsync(int id);
-    Task<Result<Project>> CreateAsync(ProjectDTO project);
+    Task<Result<ProjectDTO>> CreateAsync(ProjectDTO project);
     Task<Result<ProjectDTO>> Update(ProjectDTO project);
     Task<Result> Delete(int? id);
     Task<int> Count();

@@ -24,7 +24,12 @@ public class ProjectService : IProjectService
         _mapper = mapper;
     }
 
-    public async Task<Result<IEnumerable<Project>>> GetAllAsync() => Result.Success(await _uow.ProjectManager.GetAllAsync());
+    public async Task<Result<IEnumerable<ProjectDTO>>> GetAllAsync()
+    {
+        var projects = await _uow.ProjectManager.GetAllAsync();
+        var projectDTOs = _mapper.Map<IEnumerable<ProjectDTO>>(projects);
+        return Result.Success(projectDTOs);
+    }
 
     /// <summary>
     /// Get all sorted projects with filter
@@ -101,16 +106,16 @@ public class ProjectService : IProjectService
         return Result.Failure<ProjectDTO>($"No project with Id = {id} was found.");
     }
 
-    public async Task<Result<Project>> CreateAsync(ProjectDTO projectDTO)
+    public async Task<Result<ProjectDTO>> CreateAsync(ProjectDTO projectDTO)
     {
         if (projectDTO != null)
         {
             var project = _mapper.Map<Project>(projectDTO);
             await _uow.ProjectManager.Create(project);
             await _uow.SaveChangesAsync();
-            return Result.Success(project);
+            return Result.Success(projectDTO);
         }
-        return Result.Failure<Project>("The project is empty.");
+        return Result.Failure<ProjectDTO>("The project is empty.");
     }
 
     public async Task<Result<ProjectDTO>> Update(ProjectDTO projectDTO)

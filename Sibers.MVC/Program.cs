@@ -16,8 +16,6 @@ builder.Services.AddControllersWithViews();
 
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
-    .WriteTo.Console()
-    .WriteTo.File("Logs/log-.txt")
     .CreateLogger();
 
 builder.Host.UseSerilog();
@@ -34,6 +32,8 @@ builder.Services.AddDbContext<SibersContext>(opts => opts.UseSqlite(connection, 
                 })
                 .AddEntityFrameworkStores<SibersContext>()
                 .AddDefaultTokenProviders();
+
+builder.Services.AddScoped<IUserClaimsPrincipalFactory<User>, AvatarUserClaimsPrincipalFactory>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperInitializer));
 
