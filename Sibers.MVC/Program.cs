@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using Sibers.Core;
 using Sibers.Core.Entities;
 using Sibers.Core.Interfaces;
@@ -12,6 +13,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .WriteTo.Console()
+    .WriteTo.File("Logs/log-.txt")
+    .CreateLogger();
+
+builder.Host.UseSerilog();
 
 string connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<SibersContext>(opts => opts.UseSqlite(connection, b => b.MigrationsAssembly("Sibers.MVC")))
@@ -67,5 +76,6 @@ app.MapControllerRoute(
     pattern: "{controller=Projects}/{action=Index}/{id?}")
     .WithStaticAssets();
 
-
+Log.Information("The app is starting...");
 app.Run();
+Log.Information("The app started successfully.");

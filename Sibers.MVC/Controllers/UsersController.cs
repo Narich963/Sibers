@@ -13,11 +13,13 @@ public class UsersController : Controller
 {
     private readonly IUserService _userService;
     private readonly IMapper _mapper;
+    private readonly ILogger<UsersController> _logger;
 
-    public UsersController(IUserService userService, IMapper mapper)
+    public UsersController(IUserService userService, IMapper mapper, ILogger<UsersController> logger)
     {
         _userService = userService;
         _mapper = mapper;
+        _logger = logger;
     }
 
     /// <summary>
@@ -65,7 +67,11 @@ public class UsersController : Controller
             var userDto = _mapper.Map<UserDTO>(model);
             var loginResult = await _userService.Login(userDto);
             if (loginResult.IsSuccess)
+            {
+                _logger.LogInformation("User {User} logged in successfully", model.Email);
                 return RedirectToAction("Index", "Projects");
+            }
+            _logger.LogError("User {User} failed to login", model.Email);
             return BadRequest();
         }
         return View(model);
