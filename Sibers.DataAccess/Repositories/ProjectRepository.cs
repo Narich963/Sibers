@@ -1,9 +1,8 @@
-﻿using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Sibers.Core.Entities;
-using Sibers.Core.Interfaces;
+using Sibers.DataAccess.Interfaces;
 
-namespace Sibers.Core.Repositories;
+namespace Sibers.DataAccess.Repositories;
 
 /// <summary>
 /// The repository for interaction with Project entities

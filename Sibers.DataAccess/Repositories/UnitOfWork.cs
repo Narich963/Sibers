@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Sibers.Core.Entities;
-using Sibers.Core.Interfaces;
+using Sibers.DataAccess.Interfaces;
 
-namespace Sibers.Core.Repositories;
+namespace Sibers.DataAccess.Repositories;
 
 /// <summary>
 /// A Unit of work that allows you to work with Users and Projects

@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Sibers.Core\Sibers.Core.csproj" />
+    <ProjectReference Include="..\Sibers.DataAccess\Sibers.DataAccess.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,11 +3,11 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Sibers.Core;
+using Sibers.DataAccess;
 
 #nullable disable
 
-namespace Sibers.MVC.Migrations
+namespace Sibers.DataAccess.Migrations
 {
     [DbContext(typeof(SibersContext))]
     partial class SibersContextModelSnapshot : ModelSnapshot

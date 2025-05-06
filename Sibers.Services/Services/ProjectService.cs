@@ -3,7 +3,7 @@ using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 using Sibers.Core.Entities;
 using Sibers.Core.Enums;
-using Sibers.Core.Interfaces;
+using Sibers.DataAccess.Interfaces;
 using Sibers.Services.DTO;
 using Sibers.Services.Interfaces;
 using System.Linq.Expressions;

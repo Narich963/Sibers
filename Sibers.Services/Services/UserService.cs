@@ -3,10 +3,9 @@ using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Sibers.Core.Entities;
-using Sibers.Core.Interfaces;
+using Sibers.DataAccess.Interfaces;
 using Sibers.Services.DTO;
 using Sibers.Services.Interfaces;
-using System.Security.Claims;
 
 namespace Sibers.Services.Services;
 

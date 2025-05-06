@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Sibers.MVC.ViewModels.Users;
 using Sibers.Services.DTO;
 using Sibers.Services.Interfaces;
-using Sibers.Services.Services;
 
 namespace Sibers.MVC.Controllers;
 

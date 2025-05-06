@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Sibers.Core.Entities;
 using Sibers.Core.Enums;
 using Sibers.MVC.ViewModels.Projects;
 using Sibers.Services.DTO;
 using Sibers.Services.Interfaces;
-using Sibers.Services.Services;
 
 namespace Sibers.MVC.Controllers;
 

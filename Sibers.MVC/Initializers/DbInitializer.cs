@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Sibers.Core;
 using Sibers.Core.Entities;
 using Sibers.Core.Enums;
+using Sibers.DataAccess;
 
 namespace Sibers.MVC.Initializers;
 

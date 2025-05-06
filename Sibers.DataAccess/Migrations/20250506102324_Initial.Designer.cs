@@ -4,15 +4,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Sibers.Core;
+using Sibers.DataAccess;
 
 #nullable disable
 
-namespace Sibers.MVC.Migrations
+namespace Sibers.DataAccess.Migrations
 {
     [DbContext(typeof(SibersContext))]
-    [Migration("20250506045236_Added_Avatar")]
-    partial class Added_Avatar
+    [Migration("20250506102324_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

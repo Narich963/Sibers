@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-using Sibers.Core;
 using Sibers.Core.Entities;
-using Sibers.Core.Interfaces;
-using Sibers.Core.Repositories;
+using Sibers.DataAccess;
+using Sibers.DataAccess.Interfaces;
+using Sibers.DataAccess.Repositories;
 using Sibers.MVC.Initializers;
 using Sibers.Services.Interfaces;
 using Sibers.Services.Services;
@@ -21,7 +21,7 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 
 string connection = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<SibersContext>(opts => opts.UseSqlite(connection, b => b.MigrationsAssembly("Sibers.MVC")))
+builder.Services.AddDbContext<SibersContext>(opts => opts.UseSqlite(connection, b => b.MigrationsAssembly("Sibers.DataAccess")))
                 .AddIdentity<User, IdentityRole<int>>(opts =>
                 {
                     opts.Password.RequiredLength = 5;

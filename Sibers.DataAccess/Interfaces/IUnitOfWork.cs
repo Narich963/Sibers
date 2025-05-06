@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Sibers.Core.Entities;
 
-namespace Sibers.Core.Interfaces;
+namespace Sibers.DataAccess.Interfaces;
 
 public interface IUnitOfWork : IDisposable
 {

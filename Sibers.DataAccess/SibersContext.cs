@@ -2,9 +2,8 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Sibers.Core.Entities;
-using System.Reflection.Emit;
 
-namespace Sibers.Core;
+namespace Sibers.DataAccess;
 
 public class SibersContext : IdentityDbContext<User, IdentityRole<int>, int>
 {

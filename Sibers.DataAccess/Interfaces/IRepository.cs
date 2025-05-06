@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-
-namespace Sibers.Core.Interfaces;
+﻿namespace Sibers.DataAccess.Interfaces;
 
 public interface IRepository<T> where T : class
 {

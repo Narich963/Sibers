@@ -1,5 +1,4 @@
 ﻿using CSharpFunctionalExtensions;
-using Sibers.Core.Entities;
 using Sibers.Services.DTO;
 
 namespace Sibers.Services.Interfaces;
