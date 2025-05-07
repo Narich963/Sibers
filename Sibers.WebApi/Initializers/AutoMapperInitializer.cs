@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Sibers.Core.Entities;
 using Sibers.Services.DTO;
+using Sibers.WebApi.Contracts;
 using Sibers.WebApi.ViewModels;
 
 namespace Sibers.WebApi.Initializers;
@@ -22,5 +23,7 @@ public class AutoMapperInitializer : Profile
 
         CreateMap<UserDTO, UserResponse>()
             .ReverseMap();
+
+        CreateMap<UserDTO, LoginRequest>().ReverseMap();
     }
 }

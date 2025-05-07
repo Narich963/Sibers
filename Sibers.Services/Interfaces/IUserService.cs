@@ -9,6 +9,7 @@ public interface IUserService
     Task<Result<UserDTO>> GetAsync(int? id);
     Task<Result<UserDTO>> CreateAsync(UserDTO userDto);
     Task<Result<UserDTO>> Login(UserDTO userDto);
+    Task<Result<UserDTO>> LoginApi(UserDTO userDto);
     Task<Result> Logout();
     Task<Result<UserDTO>> Edit(UserDTO userDto);
 }

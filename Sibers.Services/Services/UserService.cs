@@ -81,6 +81,17 @@ public class UserService : IUserService
         return Result.Failure<UserDTO>("Failed to login.");
     }
 
+    public async Task<Result<UserDTO>> LoginApi(UserDTO userDto)
+    {
+        if (userDto != null)
+        {
+            var user = await _uow.UserManager.FindByEmailAsync(userDto.Email);
+            if (user != null)
+                return Result.Success(userDto);
+        }
+        return Result.Failure<UserDTO>("Failed to login");
+    }
+
     public async Task<Result> Logout()
     {
         await _uow.SignInManager.SignOutAsync();
