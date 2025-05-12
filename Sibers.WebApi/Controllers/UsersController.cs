@@ -40,28 +40,4 @@ public class UsersController : Controller
         }
         return BadRequest(usersResult.Error);
     }
-
-    [HttpPost("Login")]
-    public async Task<IActionResult> Login(LoginRequest login)
-    {
-        var userDto = _mapper.Map<UserDTO>(login);
-        var result = await _userService.LoginApi(userDto);
-
-        if (result.IsSuccess)
-        {
-            var jwtSettings = _config.GetSection("Jwt");
-            var key = jwtSettings["Key"];
-
-            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
-            var creds = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                claims: new List<Claim>(),
-                expires: DateTime.Now.AddHours(12),
-                signingCredentials: creds);
-
-            return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
-        }
-        return Unauthorized(result.Error);
-    }
 }
